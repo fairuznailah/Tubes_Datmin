@@ -1,17 +1,8 @@
+```python
 import streamlit as st
 import pandas as pd
 import joblib
 import matplotlib.pyplot as plt
-
-# ==========================
-# CONFIG
-# ==========================
-
-st.set_page_config(
-    page_title="Teen Mental Health Prediction",
-    page_icon="🧠",
-    layout="wide"
-)
 
 # ==========================
 # LOAD MODEL
@@ -21,44 +12,77 @@ model = joblib.load("logistic_model.pkl")
 scaler = joblib.load("scaler.pkl")
 
 # ==========================
+# PAGE CONFIG
+# ==========================
+
+st.set_page_config(
+    page_title="Teen Mental Health Prediction",
+    page_icon="🧠"
+)
+
+# ==========================
 # HEADER
 # ==========================
 
 st.title("🧠 Teen Mental Health Prediction")
 
-st.markdown("""
-Prediksi kemungkinan depresi pada remaja berdasarkan penggunaan media sosial,
-kualitas tidur, tingkat stres, tingkat kecemasan, dan faktor kesehatan mental lainnya.
+st.write("""
+Aplikasi ini digunakan untuk memprediksi kemungkinan depresi pada remaja
+berdasarkan aktivitas media sosial, kualitas tidur, tingkat stres,
+tingkat kecemasan, dan faktor kesehatan mental lainnya.
+
+Model yang digunakan:
+- Logistic Regression
+- Naive Bayes
 """)
 
 st.divider()
 
 # ==========================
-# SIDEBAR INPUT
+# INFORMASI DATASET
 # ==========================
 
-st.sidebar.header("📝 Input Data")
+st.subheader("📊 Informasi Dataset")
 
-age = st.sidebar.slider(
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.metric("Jumlah Data", "1200")
+
+with col2:
+    st.metric("Tidak Depresi", "1170")
+
+with col3:
+    st.metric("Depresi", "30")
+
+st.divider()
+
+# ==========================
+# INPUT DATA
+# ==========================
+
+st.header("📋 Input Data")
+
+age = st.slider(
     "Age",
     13,
     19,
     16
 )
 
-gender = st.sidebar.selectbox(
+gender = st.selectbox(
     "Gender",
     ["Female", "Male"]
 )
 
-daily_social_media_hours = st.sidebar.slider(
+daily_social_media_hours = st.slider(
     "Daily Social Media Hours",
     1.0,
     8.0,
     4.0
 )
 
-platform_usage = st.sidebar.selectbox(
+platform_usage = st.selectbox(
     "Platform Usage",
     [
         "All Platforms",
@@ -69,67 +93,67 @@ platform_usage = st.sidebar.selectbox(
     ]
 )
 
-sleep_hours = st.sidebar.slider(
+sleep_hours = st.slider(
     "Sleep Hours",
     4.0,
     9.0,
     6.5
 )
 
-screen_time_before_sleep = st.sidebar.slider(
+screen_time_before_sleep = st.slider(
     "Screen Time Before Sleep",
     0.5,
     3.0,
     1.5
 )
 
-academic_performance = st.sidebar.slider(
+academic_performance = st.slider(
     "Academic Performance",
     2.0,
     4.0,
     3.0
 )
 
-physical_activity = st.sidebar.slider(
+physical_activity = st.slider(
     "Physical Activity",
     0.0,
     2.0,
     1.0
 )
 
-social_interaction_level = st.sidebar.selectbox(
+social_interaction_level = st.selectbox(
     "Social Interaction Level",
     ["High", "Low", "Medium"]
 )
 
-stress_level = st.sidebar.slider(
+stress_level = st.slider(
     "Stress Level",
     1,
     10,
     5
 )
 
-anxiety_level = st.sidebar.slider(
+anxiety_level = st.slider(
     "Anxiety Level",
     1,
     10,
     5
 )
 
-addiction_level = st.sidebar.slider(
+addiction_level = st.slider(
     "Addiction Level",
     1,
     10,
     5
 )
 
-sleep_quality = st.sidebar.selectbox(
+sleep_quality = st.selectbox(
     "Sleep Quality",
     ["Fair", "Good", "Poor"]
 )
 
 # ==========================
-# LABEL ENCODER MAPPING
+# MAPPING LABEL ENCODER
 # ==========================
 
 gender_map = {
@@ -158,10 +182,10 @@ sleep_quality_map = {
 }
 
 # ==========================
-# PREDICTION
+# PREDIKSI
 # ==========================
 
-if st.sidebar.button("🔍 Prediksi"):
+if st.button("🔍 Prediksi"):
 
     input_data = pd.DataFrame(
         [[
@@ -202,6 +226,8 @@ if st.sidebar.button("🔍 Prediksi"):
 
     probability = model.predict_proba(input_scaled)[0]
 
+    st.divider()
+
     st.header("📈 Hasil Prediksi")
 
     col1, col2 = st.columns(2)
@@ -218,15 +244,18 @@ if st.sidebar.button("🔍 Prediksi"):
             f"{probability[1]*100:.2f}%"
         )
 
-    st.divider()
-
     if prediction == 1:
         st.error("⚠️ Terindikasi Depresi")
     else:
         st.success("✅ Tidak Terindikasi Depresi")
 
+    st.info("""
+    Prediksi dilakukan menggunakan model Logistic Regression
+    yang memiliki performa terbaik berdasarkan hasil evaluasi model.
+    """)
+
 # ==========================
-# MODEL COMPARISON
+# PERBANDINGAN MODEL
 # ==========================
 
 st.divider()
@@ -261,7 +290,7 @@ st.dataframe(
     use_container_width=True
 )
 
-fig, ax = plt.subplots(figsize=(8, 5))
+fig, ax = plt.subplots(figsize=(8,5))
 
 comparison.set_index('Model').plot(
     kind='bar',
@@ -277,21 +306,21 @@ plt.xticks(rotation=0)
 st.pyplot(fig)
 
 # ==========================
-# BEST MODEL
+# KESIMPULAN
 # ==========================
 
 st.divider()
 
-st.success("""
-🏆 Model Terbaik: Logistic Regression
+st.header("📝 Kesimpulan")
 
-Accuracy : 98.8%
-Precision : 100%
-Recall : 50%
-F1-Score : 66.7%
+st.write("""
+Berdasarkan hasil evaluasi model, Logistic Regression memberikan performa terbaik
+dengan accuracy sebesar 98.8%.
 
-Model Logistic Regression dipilih sebagai model utama karena memiliki
-akurasi dan performa keseluruhan yang lebih baik dibandingkan Naive Bayes.
+Model ini memiliki precision sebesar 100%, recall sebesar 50%, dan F1-score sebesar 66.7%.
+
+Oleh karena itu, Logistic Regression dipilih sebagai model utama untuk melakukan
+prediksi kondisi depresi pada remaja.
 """)
 
 # ==========================
@@ -301,5 +330,5 @@ akurasi dan performa keseluruhan yang lebih baik dibandingkan Naive Bayes.
 st.divider()
 
 st.caption(
-    "Project Data Mining | Teen Mental Health Prediction Dashboard"
+    "Project Data Mining 2025 | Teen Mental Health Prediction Dashboard"
 )
