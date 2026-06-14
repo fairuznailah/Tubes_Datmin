@@ -29,7 +29,7 @@ age = st.slider("Age", 13, 19, 16)
 
 gender = st.selectbox(
     "Gender",
-    ["female", "male"]
+    ["Female", "Male"]
 )
 
 daily_social_media_hours = st.slider(
@@ -70,7 +70,7 @@ physical_activity = st.slider(
 
 social_interaction_level = st.selectbox(
     "Social Interaction Level",
-    ["high", "low", "medium"]
+    ["High", "Low", "Medium"]
 )
 
 stress_level = st.slider(
@@ -98,8 +98,8 @@ sleep_quality = st.selectbox(
 # ======================
 
 gender_map = {
-    "female": 0,
-    "male": 1
+    "Female": 0,
+    "Male": 1
 }
 
 platform_map = {
@@ -111,9 +111,9 @@ platform_map = {
 }
 
 social_map = {
-    "high": 0,
-    "low": 1,
-    "medium": 2
+    "High": 0,
+    "Low": 1,
+    "Medium": 2
 }
 
 sleep_quality_map = {
