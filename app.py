@@ -184,6 +184,9 @@ if st.button("🔍 Prediksi"):
 
     st.subheader("📊 Perbandingan Model")
 
+
+
+st.title("📊 Perbandingan Model")
 comparison = pd.DataFrame({
     'Model': [
         'Logistic Regression',
